@@ -3,14 +3,11 @@ import requests
 from bs4 import BeautifulSoup
 from googleapiclient.discovery import build
 
-# ✅ 페이지 설정
 st.set_page_config(page_title="TrendSeller 데모", layout="wide")
 st.title("🔥 TrendSeller: 쿠팡 & 유튜브 인기 제품 리뷰 탐색기")
 
-# ✅ 사용자 키워드 입력
 keyword = st.text_input("🔍 검색할 제품 키워드 입력", value="폼롤러")
 
-# ✅ 쿠팡 인기 상품 크롤링 함수
 def crawl_coupang_best(keyword):
     url = f"https://www.coupang.com/np/search?q={keyword}&channel=user"
     headers = {"User-Agent": "Mozilla/5.0"}
@@ -30,7 +27,6 @@ def crawl_coupang_best(keyword):
             })
     return result
 
-# ✅ 유튜브 리뷰 영상 검색 함수
 def search_youtube_videos(keyword):
     API_KEY = "AIzaSyBOjbAJSGP02mrurAF_YZzEpI8AnA7rv9o"
     youtube = build("youtube", "v3", developerKey=API_KEY)
@@ -51,17 +47,18 @@ def search_youtube_videos(keyword):
         results.append({"title": title, "url": url})
     return results
 
-# ✅ 버튼 클릭 시 실행
 if st.button("🔥 인기 상품 & 영상 불러오기"):
     with st.spinner("데이터 수집 중..."):
-        # 쿠팡 상품 출력
-        coupang_results = crawl_coupang_best(keyword)
-        st.subheader("🛒 쿠팡 인기 상품")
-        for item in coupang_results:
-            st.markdown(f"**{item['title']}**  \n가격: {item['price']}원  \n[구매 링크]({item['link']})")
-            st.markdown("---")
+        try:
+            coupang_results = crawl_coupang_best(keyword)
+            st.subheader("🛒 쿠팡 인기 상품")
+            for item in coupang_results:
+                st.markdown(f"**{item['title']}**  \n가격: {item['price']}원  \n[구매 링크]({item['link']})")
+                st.markdown("---")
+        except Exception as e:
+            st.error("❌ 쿠팡 상품 수집 실패")
+            st.code(str(e))
 
-        # 유튜브 리뷰 영상 출력 (예외 처리 포함)
         try:
             youtube_results = search_youtube_videos(keyword)
             st.subheader("🎬 유튜브 인기 리뷰 영상")
@@ -69,5 +66,5 @@ if st.button("🔥 인기 상품 & 영상 불러오기"):
                 st.markdown(f"**{video['title']}**  \n[영상 보기]({video['url']})")
                 st.markdown("---")
         except Exception as e:
-            st.error("❌ 유튜브 데이터를 불러오지 못했습니다. API 키 또는 연결 상태를 확인해주세요.")
+            st.error("❌ 유튜브 영상 수집 실패")
             st.code(str(e))
