@@ -61,7 +61,7 @@ if st.button("🔥 인기 상품 & 영상 불러오기"):
             st.markdown(f"**{item['title']}**  \n가격: {item['price']}원  \n[구매 링크]({item['link']})")
             st.markdown("---")
 
-        # 유튜브 리뷰 영상 출력
+        # 유튜브 리뷰 영상 출력 (예외 처리 포함)
         try:
             youtube_results = search_youtube_videos(keyword)
             st.subheader("🎬 유튜브 인기 리뷰 영상")
@@ -69,5 +69,5 @@ if st.button("🔥 인기 상품 & 영상 불러오기"):
                 st.markdown(f"**{video['title']}**  \n[영상 보기]({video['url']})")
                 st.markdown("---")
         except Exception as e:
-            st.error("❌ 유튜브 데이터를 불러오지 못했습니다. API 키를 확인해주세요.")
+            st.error("❌ 유튜브 데이터를 불러오지 못했습니다. API 키 또는 연결 상태를 확인해주세요.")
             st.code(str(e))
