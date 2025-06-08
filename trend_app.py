@@ -28,7 +28,7 @@ def crawl_coupang_best(keyword):
     return result
 
 def search_youtube_videos(keyword):
-    API_KEY = "YOUR_YOUTUBE_API_KEY"
+    API_KEY = "AIzaSyBOjbAJSGP02mrurAF_YZzEpI8AnA7rv9o"
     youtube = build("youtube", "v3", developerKey=API_KEY)
     request = youtube.search().list(
         q=keyword + " 리뷰",
